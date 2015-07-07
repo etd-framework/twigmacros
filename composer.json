@@ -1,0 +1,15 @@
+{
+  "name": "etdsolutions/twigmacros",
+  "minimum-stability": "dev",
+  "description": "Package Twig Macros du Framework ETD",
+  "homepage": "https://github.com/etd-framework/twigmacros",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Jean-Baptiste Alleaume",
+      "email": "jb.alleaume@etd-solutions.com",
+      "homepage": "http://alleau.me",
+      "role": "Manager"
+    }
+  ]
+}
