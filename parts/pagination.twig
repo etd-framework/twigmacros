@@ -1,0 +1,48 @@
+{%- set selectedLimit = pagination.viewall ? 0 : pagination.limit -%}
+{%- set pagesStart = pagination.pagesStart -%}
+{%- set pagesStop = pagination.pagesStop -%}
+<div class="pagination-wrapper">
+    <div class="row">
+        <div class="col-md-4 footer">
+            {{ translate('APP_PAGINATION_DISPLAY_NUM') }}
+            <select id="limit" name="limit" class="form-control input-sm" size="1" onchange="this.form.submit();">
+                {% for i in range(5, 30, 5) %}
+                <option value="{{ i }}"{% if i == selectedLimit %} selected="selected"{% endif %}>{{ i }}</option>
+                {% endfor %}
+                <option value="50"{% if 50 == selectedLimit %} selected="selected"{% endif %}>50</option>
+                <option value="100"{% if 100 == selectedLimit %} selected="selected"{% endif %}>100</option>
+                <option value="0"{% if pagination.total == selectedLimit %} selected="selected"{% endif %}>{{ translate('APP_GLOBAL_ALL') }}</option>
+            </select>
+        </div>
+        <div class="col-md-4 links">
+            <nav>
+                <ul class="pagination pagination-sm">
+                    {% if pagination.pagesCurrent > 1 %}
+                    {% set page = (pagination.pagesCurrent - 2) * pagination.limit %}
+                    <li><a href="{{ uri.current }}?start={{ page }}" class="pagenav">&laquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in pagesStart .. pagesStop %}
+                    {% set offset = (i - 1) * pagination.limit %}
+                    {% if i != pagination.pagesCurrent or pagination.viewall %}
+                    <li><a href="{{ uri.current }}?start={{ offset }}" class="pagenav">{{ i }}</a></li>
+                    {% else %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if pagination.pagesCurrent < pagination.pagesTotal %}
+                    {% set next = pagination.pagesCurrent * pagination.limit %}
+                    <li><a href="{{ uri.current }}?start={{ next }}" class="pagenav">&raquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-4 counter">
+            {{ pagination.total }} {% if pagination.total < 2 %}{{ translate('APP_PAGINATION_RECORD') }}{% else %}{{ translate('APP_PAGINATION_RECORDS') }}{% endif %}
+        </div>
+    </div>
+    <input type="hidden" name="start" value="{{ pagination.start }}">
+</div>

@@ -1,0 +1,148 @@
+{#
+ # Part of the ETD Framework Twig Macros Package
+ #
+ # @copyright   Copyright (C) 2015 ETD Solutions. Tous droits réservés.
+ # @license     Apache License 2.0; see LICENSE
+ # @author      ETD Solutions http://etd-solutions.com
+ #}
+
+{#
+ # Ajoute le script pour afficher les infobulles Bootstrap.
+ #
+ #}
+{% macro tooltip() %}
+    {%- do addDomReadyJS("$('[data-toggle=\"tooltip\"], .hasTooltip').tooltip({container:'body',html:true});", false, "bootstrap") -%}
+{% endmacro %}
+
+{#
+# Convertie deux chaines séparées en une chaine prête pour les infobulles Bootstrap.
+#
+# @param  string title     Le titre de l'infobulle (ou deux chaines combinées avec '::').
+# @param  string content   Le contenu de l'infobulle.
+# @param  bool   translate Si true les textes seront passés dans Text.
+# @param  bool   escape    Si true les textes seront passés dans htmlspecialchars.
+#
+# @return  string  L'infobulle
+#}
+{% macro tooltipText(title, content, translate = true, escape) %}
+    {%- set translate = translate|default(true) -%}
+    {%- set escape = escape|default(true) -%}
+    {%- if title is not empty or content is not empty -%}
+        {%- if translate -%}
+            {%- set title = translate(title) -%}
+            {%- set content = translate(content) -%}
+        {%- endif -%}
+        {%- autoescape false -%}
+        {%- if (title is empty) -%}
+            {{ content }}
+        {%- elseif (title == content) -%}
+            <strong>{{ title }}</strong>
+        {%- elseif (content is not empty) -%}
+            <strong>{{ title }}</strong><br>{{ content }}
+        {%- else -%}
+            {{ title }}
+        {%- endif -%}
+        {%- endautoescape -%}
+    {%- endif -%}
+{% endmacro %}
+
+{#
+ # Macro pour trier une colonne dans un tableau.
+ #
+ # @param   string title         Le titre de la colonne
+ # @param   string order         Le champ sur lequel le tri se fera
+ # @param   string direction     La direction actuelle
+ # @param   mixed  selected      Le tri sélectionné
+ # @param   string task          Un override optionnel de la tâche
+ # @param   string new_direction Une direction optionnelle pour la colonne
+ # @param   string tip           Un texte optionnel affiché comme infobulle au lieu de $title
+ # @param   string icon          L'icône à afficher
+ # @param   string formName      Le nom du formulaire à envoyer
+ #
+ # @return  string
+ #}
+{% macro sort(title, order, direction, selected, task, new_direction, tip, icon, formName) %}
+    {%- import _self as self -%}
+    {%- do self.tooltip() -%}
+    {%- set direction = direction|default('asc')|lower -%}
+    {%- set selected = selected|default(0) -%}
+    {%- set new_direction = new_direction|default('asc') -%}
+    {%- set formName = new_direction|default('form-admin') -%}
+    {%- set orderIcons = [ "fa-toggle-up", "fa-toggle-down" ] -%}
+    {%- set index = (direction == "desc") * 1 -%}
+    {%- set direction = (order != selected) ? new_direction : (direction == 'desc') ? 'asc' : 'desc' -%}
+    <a href="#" class="list-ordering hasTooltip" data-order="{{ order }}" data-direction="{{ direction|upper }}" data-name="{{ translate(title) }}" title="{{ self.tooltipText(tip ? tip : title, 'APP_GLOBAL_CLICK_TO_SORT_THIS_COLUMN') }}">
+        {%- if icon is not empty -%}<span class="fa {{ icon }}"></span>&nbsp;{%- endif -%}
+        {%- if title is not empty -%}{{ translate(title) }}{%- endif -%}
+        {%- if order == selected -%}&nbsp;<span class="fa {{ attribute(orderIcons, index) }}"></span>{%- endif -%}
+    </a>
+{% endmacro %}
+
+{#
+ # Génère un icône d'état pour un élément.
+ #
+ # @param int    value            La valeur de l'état
+ # @param bool   canEdit          Si true, l'action est disponible
+ # @param array  states           Les états possibles
+ # @param bool   tooltips         Si true, on affiche une info-bulle avec l'état
+ # @param string tooltipPlacement Emplacement de l'info-bulle.
+ # @param string href             Valeur de l'attribut href du lien
+ # @param null   class            Classe CSS
+ # @param array  attribs          Attributs supplémentaires
+ #
+ # @return string
+ #}
+{% macro choice(value, canEdit, states, tooltips, tooltipPlacement, href, class, attribs) %}
+    {%- import _self as self -%}
+    {%- set tooltips = tooltips|default(true) -%}
+    {%- set tooltipPlacement = tooltipPlacement|default('top') -%}
+    {%- set href = href|default('#') -%}
+    {%- set class = class|default('') -%}
+    {%- set html = canEdit ? '<a href="' ~ href ~ '"' : '<span' -%}
+    {%- if class is not empty -%}
+        {%- set html = html ~ ' class="' ~ class ~ '"' -%}
+    {%- endif -%}
+    {%- if canEdit and attribs is not empty -%}
+        {% set html = html ~ ' ' ~ arrayToString(attribs) %}
+    {%- endif -%}
+    {%- if tooltips -%}
+        {% set html = html ~ ' data-toggle="tooltip" data-placement="' ~ tooltipPlacement ~ '" title="' ~ self.tooltipText(states[value].text) ~ '"' %}
+    {%- endif -%}
+    {%- set html = html ~ '><span class="fa fa-' ~ states[value].icon ~ '"></span>' -%}
+    {%- set html = html ~ (canEdit ? '</a>' : '</span>') -%}
+    {{ html|raw }}
+{% endmacro %}
+
+{#
+ # Génère un icône d'état pour un élément.
+ #
+ # @param int    value            La valeur de l'état
+ # @param bool   canEdit          Si true, l'action est disponible
+ # @param bool   tooltips         Si true, on affiche une info-bulle avec l'état
+ # @param string tooltipPlacement Emplacement de l'info-bulle.
+ # @param string href             Valeur de l'attribut href du lien
+ # @param null   class            Classe CSS
+ # @param array  attribs          Attributs supplémentaires
+ #
+ # @return string
+ #}
+{% macro state(value, canEdit, tooltips, tooltipPlacement, href, class, attribs) %}
+    {%- import _self as self -%}
+    {{ self.choice(value, canEdit, {
+        '0': {'text': 'APP_GLOBAL_STATE_0',
+            'icon': 'times'
+        },
+        '1': {
+            'text': 'APP_GLOBAL_STATE_1',
+            'icon': 'check'
+        },
+        '2': {
+            'text': 'APP_GLOBAL_STATE_2',
+            'icon': 'archive'
+        },
+        '-2': {
+            'text': 'APP_GLOBAL_STATE__2',
+            'icon': 'trash'
+        }
+    }, tooltips, tooltipPlacement, href, class, attribs) }}
+{% endmacro %}

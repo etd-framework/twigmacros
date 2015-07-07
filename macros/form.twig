@@ -1,0 +1,70 @@
+{#
+ # Part of the ETD Framework Twig Macros Package
+ #
+ # @copyright   Copyright (C) 2015 ETD Solutions. Tous droits réservés.
+ # @license     Apache License 2.0; see LICENSE
+ # @author      ETD Solutions http://etd-solutions.com
+ #}
+
+{#
+ # Affiche un champ
+ #
+ # @param Form   form      Le formulaire
+ # @param string fieldname Le nom du champ à afficher
+ #
+ # @return string
+ #}
+{% macro field(form, fieldname, group) %}
+ {%- autoescape false -%}
+ {%- if form.getField(fieldname).type|lower == "hidden" -%}
+  {{ form.getInput(fieldname, group) }}
+ {%- else -%}
+  <div class="form-group">
+   {{ form.getLabel(fieldname, group) }}
+   {{ form.getInput(fieldname, group) }}
+  </div>
+ {%- endif -%}
+ {%- endautoescape -%}
+{% endmacro %}
+
+{#
+ # Affiche les champs d'un groupe
+ #
+ # @param Form   form Le formulaire
+ # @param string name Le nom du groupe de champs à afficher
+ #
+ # @return string
+ #}
+{% macro group(form, name) %}
+ {%- autoescape false -%}
+ {%- for field in form.getGroup(name) -%}
+  <div class="form-group">
+   {{ field.label }}
+   {{ field.input }}
+  </div>
+ {%- endfor -%}
+ {%- endautoescape -%}
+{% endmacro %}
+
+{#
+ # Affiche les champs d'un fieldset
+ #
+ # @param Form   form Le formulaire
+ # @param string set  Le nom du fieldset de champs à afficher
+ #
+ # @return string
+ #}
+{% macro fieldset(form, set) %}
+ {%- autoescape false -%}
+ {%- for field in form.getFieldset(set) -%}
+  {%- if field.type == "Hidden" -%}
+   {{ field.input }}
+  {%- else -%}
+  <div class="form-group">
+   {{ field.label }}
+   {{ field.input }}
+  </div>
+   {%- endif -%}
+ {%- endfor -%}
+ {%- endautoescape -%}
+{% endmacro %}

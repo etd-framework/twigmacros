@@ -1,0 +1,15 @@
+{#
+ # Part of the ETD Framework Twig Macros Package
+ #
+ # @copyright   Copyright (C) 2015 ETD Solutions. Tous droits réservés.
+ # @license     Apache License 2.0; see LICENSE
+ # @author      ETD Solutions http://etd-solutions.com
+ #}
+
+{%- import "macros/form.twig" as mform -%}
+<div class="form-inline">
+    {{ mform.fieldset(form) }}
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">{{ translate('APP_GLOBAL_OK') }}</button>
+    </div>
+</div>

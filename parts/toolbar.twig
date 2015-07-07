@@ -1,0 +1,28 @@
+{#
+ # Part of the ETD Framework Twig Macros Package
+ #
+ # @copyright   Copyright (C) 2015 ETD Solutions. Tous droits réservés.
+ # @license     Apache License 2.0; see LICENSE
+ # @author      ETD Solutions http://etd-solutions.com
+ #}
+
+{% if toolbar.title is not empty %}
+<div id="toolbar" class="container-fluid">
+    <div class="row">
+        <div class="col-md-5">
+            <h1>{{ toolbar.title }}</h1>
+        </div>
+        <div class="col-md-7">
+{% endif %}
+            {% if toolbar.buttons is not empty %}
+            <div class="btn-toolbar text-right" role="toolbar" aria-label="Barre d'outils">
+                {% for button in toolbar.buttons %}
+                    {{ button.render()|raw }}
+                {% endfor %}
+            </div>
+            {% endif %}
+{% if toolbar.title is not empty %}
+        </div>
+    </div>
+</div>
+{% endif %}

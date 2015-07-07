@@ -1,0 +1,27 @@
+{#
+ # Part of the ETD Framework Twig Macros Package
+ #
+ # @copyright   Copyright (C) 2015 ETD Solutions. Tous droits réservés.
+ # @license     Apache License 2.0; see LICENSE
+ # @author      ETD Solutions http://etd-solutions.com
+ #}
+
+{% macro modal(id, title, buttonSaveLabel, content) %}
+    <div class="modal fade" {% if id is not empty %} id="{{ id }}"{% endif %} tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ title|raw }}</h4>
+                </div>
+                <div class="modal-body">
+                    {{ content|raw }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="fa fa-times"></span> {{ translate('APP_GLOBAL_MODAL_CLOSE') }}</button>
+                    <button type="submit" class="btn btn-success"><span class="fa fa-save"></span> {% autoescape false %}{{ buttonSaveLabel }}{% endautoescape %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
