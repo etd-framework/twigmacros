@@ -9,42 +9,44 @@
 {%- set titleCol = titleCol|default(0) -%}
 {%- set filterCol = filterCol|default(0) -%}
 {%- set buttonsCol = buttonsCol|default(0) -%}
-{%- if toolbar.title is not empty -%}
+{%- if titleCol == 0 and filterCol == 0 and buttonsCol == 0 -%}
+    {%- if toolbar.title is not empty -%}
 
-    {%- set titleCol = 12 -%}
+        {%- set titleCol = 12 -%}
 
-    {%- if toolbar.filterForm is not null and toolbar.buttons is empty -%}
-        {%- set titleCol = 6 -%}
-        {%- set filterCol = 6 -%}
-    {%- endif -%}
-
-    {%- if toolbar.filterForm is null and toolbar.buttons is not empty -%}
-        {%- set titleCol = 6 -%}
-        {%- set buttonsCol = 6 -%}
-    {%- endif -%}
-
-    {%- if toolbar.filterForm is not null and toolbar.buttons is not empty -%}
-        {%- set titleCol = 4 -%}
-        {%- set filterCol = 4 -%}
-        {%- set buttonsCol = 4 -%}
-    {%- endif -%}
-
-{%- else -%}
-
-    {%- if toolbar.filterForm is not null -%}
-        {%- set filterCol = 12 -%}
-
-        {%- if toolbar.buttons is not empty -%}
+        {%- if toolbar.filterForm is not null and toolbar.buttons is empty -%}
+            {%- set titleCol = 6 -%}
             {%- set filterCol = 6 -%}
+        {%- endif -%}
+
+        {%- if toolbar.filterForm is null and toolbar.buttons is not empty -%}
+            {%- set titleCol = 6 -%}
             {%- set buttonsCol = 6 -%}
+        {%- endif -%}
+
+        {%- if toolbar.filterForm is not null and toolbar.buttons is not empty -%}
+            {%- set titleCol = 4 -%}
+            {%- set filterCol = 4 -%}
+            {%- set buttonsCol = 4 -%}
         {%- endif -%}
 
     {%- else -%}
 
-        {%- set buttonsCol = 12 -%}
+        {%- if toolbar.filterForm is not null -%}
+            {%- set filterCol = 12 -%}
+
+            {%- if toolbar.buttons is not empty -%}
+                {%- set filterCol = 6 -%}
+                {%- set buttonsCol = 6 -%}
+            {%- endif -%}
+
+        {%- else -%}
+
+            {%- set buttonsCol = 12 -%}
+
+        {%- endif -%}
 
     {%- endif -%}
-
 {%- endif -%}
 {% if titleCol > 0 or filterCol > 0 or buttonsCol > 0 %}
 <div id="toolbar" class="container-fluid">
