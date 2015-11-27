@@ -54,6 +54,7 @@
         {% if toolbar.title is not empty %}
             <div class="col-md-{{ titleCol }}">
                 <h1>{{ toolbar.title }}</h1>
+                {% if toolbar.subtitle is not empty %}<small>{{ toolbar.subtitle|locale_date('%d/%m/%Y') }}</small>{% endif %}
             </div>
         {% endif %}
         {% if toolbar.filterForm is not null %}
