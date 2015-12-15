@@ -6,6 +6,21 @@
  # @author      ETD Solutions http://etd-solutions.com
  #}
 
+{% macro hField(form, fieldname, group) %}
+ {%- autoescape false -%}
+  {%- if form.getField(fieldname).type|lower == "hidden" -%}
+   {{ form.getInput(fieldname, group) }}
+  {%- else -%}
+   <div class="form-group form-group-sm">
+    {{ form.getLabel(fieldname, group) }}
+    <div class="col-sm-8">
+     {{ form.getInput(fieldname, group) }}
+    </div>
+   </div>
+  {%- endif -%}
+ {%- endautoescape -%}
+{% endmacro %}
+
 {#
  # Affiche un champ
  #
@@ -14,16 +29,16 @@
  #
  # @return string
  #}
-{% macro field(form, fieldname, group) %}
+{% macro field(form, fieldname, group, class) %}
  {%- autoescape false -%}
- {%- if form.getField(fieldname).type|lower == "hidden" -%}
-  {{ form.getInput(fieldname, group) }}
- {%- else -%}
-  <div class="form-group">
-   {{ form.getLabel(fieldname, group) }}
+  {%- if form.getField(fieldname).type|lower == "hidden" -%}
    {{ form.getInput(fieldname, group) }}
-  </div>
- {%- endif -%}
+  {%- else -%}
+   <div class="form-group{% if class is not empty %} {{ class }}{% endif %}">
+    {{ form.getLabel(fieldname, group) }}
+    {{ form.getInput(fieldname, group) }}
+   </div>
+  {%- endif -%}
  {%- endautoescape -%}
 {% endmacro %}
 
@@ -37,12 +52,12 @@
  #}
 {% macro group(form, name) %}
  {%- autoescape false -%}
- {%- for field in form.getGroup(name) -%}
-  <div class="form-group">
-   {{ field.label }}
-   {{ field.input }}
-  </div>
- {%- endfor -%}
+  {%- for field in form.getGroup(name) -%}
+   <div class="form-group">
+    {{ field.label }}
+    {{ field.input }}
+   </div>
+  {%- endfor -%}
  {%- endautoescape -%}
 {% endmacro %}
 
@@ -56,15 +71,15 @@
  #}
 {% macro fieldset(form, set) %}
  {%- autoescape false -%}
- {%- for field in form.getFieldset(set) -%}
-  {%- if field.type == "Hidden" -%}
-   {{ field.input }}
-  {%- else -%}
-  <div class="form-group">
-   {{ field.label }}
-   {{ field.input }}
-  </div>
+  {%- for field in form.getFieldset(set) -%}
+   {%- if field.type == "Hidden" -%}
+    {{ field.input }}
+   {%- else -%}
+    <div class="form-group">
+     {{ field.label }}
+     {{ field.input }}
+    </div>
    {%- endif -%}
- {%- endfor -%}
+  {%- endfor -%}
  {%- endautoescape -%}
 {% endmacro %}
