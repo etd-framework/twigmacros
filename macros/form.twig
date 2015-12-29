@@ -6,12 +6,12 @@
  # @author      ETD Solutions http://etd-solutions.com
  #}
 
-{% macro hField(form, fieldname, group) %}
+{% macro hField(form, fieldname, group, class) %}
  {%- autoescape false -%}
   {%- if form.getField(fieldname).type|lower == "hidden" -%}
    {{ form.getInput(fieldname, group) }}
   {%- else -%}
-   <div class="form-group form-group-sm">
+   <div class="form-group{% if class is not empty %} {{ class }}{% endif %}">
     {{ form.getLabel(fieldname, group) }}
     <div class="col-sm-8">
      {{ form.getInput(fieldname, group) }}
