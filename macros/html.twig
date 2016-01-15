@@ -58,10 +58,11 @@
  # @param   string tip           Un texte optionnel affiché comme infobulle au lieu de $title
  # @param   string icon          L'icône à afficher
  # @param   string formName      Le nom du formulaire à envoyer
+ # @param   bool   translate     False pour ne pas traduire, sinon on traduit.
  #
  # @return  string
  #}
-{% macro sort(title, order, direction, selected, task, new_direction, tip, icon, formName) %}
+{% macro sort(title, order, direction, selected, task, new_direction, tip, icon, formName, translate) %}
     {%- import _self as self -%}
     {%- do self.tooltip() -%}
     {%- set direction = direction|default('asc')|lower -%}
@@ -71,9 +72,9 @@
     {%- set orderIcons = [ "fa-toggle-up", "fa-toggle-down" ] -%}
     {%- set index = (direction == "desc") * 1 -%}
     {%- set direction = (order != selected) ? new_direction : (direction == 'desc') ? 'asc' : 'desc' -%}
-    <a href="#" class="list-ordering hasTooltip" data-order="{{ order }}" data-direction="{{ direction|upper }}" data-name="{{ translate(title) }}" title="{{ self.tooltipText(tip ? tip : title, 'APP_GLOBAL_CLICK_TO_SORT_THIS_COLUMN') }}">
+    <a href="#" class="list-ordering hasTooltip" data-order="{{ order }}" data-direction="{{ direction|upper }}" data-name="{% if translate == false %}{{ title }}{% else %}{{ translate(title) }}{%- endif -%}" title="{{ self.tooltipText(tip ? tip : title, 'APP_GLOBAL_CLICK_TO_SORT_THIS_COLUMN') }}">
         {%- if icon is not empty -%}<span class="fa {{ icon }}"></span>&nbsp;{%- endif -%}
-        {%- if title is not empty -%}{{ translate(title) }}{%- endif -%}
+        {%- if title is not empty -%}{% if translate == false %}{{ title|raw }}{% else %}{{ translate(title) }}{%- endif -%}{%- endif -%}
         {%- if order == selected -%}&nbsp;<span class="fa {{ attribute(orderIcons, index) }}"></span>{%- endif -%}
     </a>
 {% endmacro %}
